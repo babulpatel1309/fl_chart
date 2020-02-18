@@ -127,8 +127,10 @@ class BarChartData extends AxisChartData {
         groupsSpace: lerpDouble(a.groupsSpace, b.groupsSpace, t),
         alignment: b.alignment,
         titlesData: FlTitlesData.lerp(a.titlesData, b.titlesData, t),
-        axisTitleData: FlAxisTitleData.lerp(a.axisTitleData, b.axisTitleData, t),
-        rangeAnnotations: RangeAnnotations.lerp(a.rangeAnnotations, b.rangeAnnotations, t),
+        axisTitleData:
+            FlAxisTitleData.lerp(a.axisTitleData, b.axisTitleData, t),
+        rangeAnnotations:
+            RangeAnnotations.lerp(a.rangeAnnotations, b.rangeAnnotations, t),
         barTouchData: b.barTouchData,
         gridData: FlGridData.lerp(a.gridData, b.gridData, t),
         borderData: FlBorderData.lerp(a.borderData, b.borderData, t),
@@ -183,8 +185,9 @@ class BarChartGroupData {
       return 0;
     }
 
-    final double sumWidth =
-        barRods.map((rodData) => rodData.width).reduce((first, second) => first + second);
+    final double sumWidth = barRods
+        .map((rodData) => rodData.width)
+        .reduce((first, second) => first + second);
     final double spaces = (barRods.length - 1) * barsSpace;
 
     return sumWidth + spaces;
@@ -200,17 +203,19 @@ class BarChartGroupData {
       x: x ?? this.x,
       barRods: barRods ?? this.barRods,
       barsSpace: barsSpace ?? this.barsSpace,
-      showingTooltipIndicators: showingTooltipIndicators ?? this.showingTooltipIndicators,
+      showingTooltipIndicators:
+          showingTooltipIndicators ?? this.showingTooltipIndicators,
     );
   }
 
-  static BarChartGroupData lerp(BarChartGroupData a, BarChartGroupData b, double t) {
+  static BarChartGroupData lerp(
+      BarChartGroupData a, BarChartGroupData b, double t) {
     return BarChartGroupData(
       x: (a.x + (b.x - a.x) * t).round(),
       barRods: lerpBarChartRodDataList(a.barRods, b.barRods, t),
       barsSpace: lerpDouble(a.barsSpace, b.barsSpace, t),
-      showingTooltipIndicators:
-          lerpIntList(a.showingTooltipIndicators, b.showingTooltipIndicators, t),
+      showingTooltipIndicators: lerpIntList(
+          a.showingTooltipIndicators, b.showingTooltipIndicators, t),
     );
   }
 }
@@ -260,7 +265,8 @@ class BarChartRodData {
       width: lerpDouble(a.width, b.width, t),
       borderRadius: BorderRadius.lerp(a.borderRadius, b.borderRadius, t),
       y: lerpDouble(a.y, b.y, t),
-      backDrawRodData: BackgroundBarChartRodData.lerp(a.backDrawRodData, b.backDrawRodData, t),
+      backDrawRodData: BackgroundBarChartRodData.lerp(
+          a.backDrawRodData, b.backDrawRodData, t),
       rodStackItem: lerpBarChartRodStackList(a.rodStackItem, b.rodStackItem, t),
     );
   }
@@ -286,7 +292,8 @@ class BarChartRodStackItem {
     );
   }
 
-  static BarChartRodStackItem lerp(BarChartRodStackItem a, BarChartRodStackItem b, double t) {
+  static BarChartRodStackItem lerp(
+      BarChartRodStackItem a, BarChartRodStackItem b, double t) {
     return BarChartRodStackItem(
       lerpDouble(a.fromY, b.fromY, t),
       lerpDouble(a.toY, b.toY, t),
@@ -361,7 +368,8 @@ class BarTouchData extends FlTouchData {
       enableNormalTouch: enableNormalTouch ?? this.enableNormalTouch,
       touchTooltipData: touchTooltipData ?? this.touchTooltipData,
       touchExtraThreshold: touchExtraThreshold ?? this.touchExtraThreshold,
-      allowTouchBarBackDraw: allowTouchBarBackDraw ?? this.allowTouchBarBackDraw,
+      allowTouchBarBackDraw:
+          allowTouchBarBackDraw ?? this.allowTouchBarBackDraw,
       handleBuiltInTouches: handleBuiltInTouches ?? this.handleBuiltInTouches,
       touchCallback: touchCallback ?? this.touchCallback,
     );
@@ -376,15 +384,16 @@ class BarTouchTooltipData {
   final EdgeInsets tooltipPadding;
   final double tooltipBottomMargin;
   final double maxContentWidth;
-  final GetBarTooltipItem getTooltipItem;
+  final GetBarTooltipItemRichText getTooltipItem;
 
   const BarTouchTooltipData({
     this.tooltipBgColor = Colors.white,
     this.tooltipRoundedRadius = 4,
-    this.tooltipPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.tooltipPadding =
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.tooltipBottomMargin = 16,
     this.maxContentWidth = 120,
-    this.getTooltipItem = defaultBarTooltipItem,
+    this.getTooltipItem = defaultBarTooltipItemRichText,
   }) : super();
 }
 
@@ -398,6 +407,13 @@ typedef GetBarTooltipItem = BarTooltipItem Function(
   BarChartRodData rod,
   int rodIndex,
 );
+
+typedef GetBarTooltipItemRichText = BarTooltipItemRichText Function(
+    BarChartGroupData group,
+    int groupIndex,
+    BarChartRodData rod,
+    int rodIndex,
+    );
 
 BarTooltipItem defaultBarTooltipItem(
   BarChartGroupData group,
@@ -419,6 +435,30 @@ class BarTooltipItem {
   final TextStyle textStyle;
 
   BarTooltipItem(this.text, this.textStyle);
+}
+
+BarTooltipItemRichText defaultBarTooltipItemRichText(
+  BarChartGroupData group,
+  int groupIndex,
+  BarChartRodData rod,
+  int rodIndex,
+) {
+  final TextStyle textStyle = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 14,
+  );
+  return BarTooltipItemRichText(RichText(
+    text: TextSpan(children: <TextSpan>[
+      TextSpan(text: rod.y.toString(), style: textStyle)
+    ]),
+  ));
+}
+
+class BarTooltipItemRichText {
+  final RichText text;
+
+  BarTooltipItemRichText(this.text);
 }
 
 /// holds the data of touch response on the [BarChart]
@@ -458,7 +498,8 @@ class BarTouchedSpot extends TouchedSpot {
 }
 
 class BarChartDataTween extends Tween<BarChartData> {
-  BarChartDataTween({BarChartData begin, BarChartData end}) : super(begin: begin, end: end);
+  BarChartDataTween({BarChartData begin, BarChartData end})
+      : super(begin: begin, end: end);
 
   @override
   BarChartData lerp(double t) => begin.lerp(begin, end, t);
