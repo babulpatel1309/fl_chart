@@ -384,7 +384,7 @@ class BarTouchTooltipData {
   final EdgeInsets tooltipPadding;
   final double tooltipBottomMargin;
   final double maxContentWidth;
-  final GetBarTooltipItemRichText getTooltipItem;
+  final GetBarTooltipItem getTooltipItem;
 
   const BarTouchTooltipData({
     this.tooltipBgColor = Colors.white,
@@ -393,7 +393,7 @@ class BarTouchTooltipData {
         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.tooltipBottomMargin = 16,
     this.maxContentWidth = 120,
-    this.getTooltipItem = defaultBarTooltipItemRichText,
+    this.getTooltipItem = defaultBarTooltipItem,
   }) : super();
 }
 
@@ -409,11 +409,11 @@ typedef GetBarTooltipItem = BarTooltipItem Function(
 );
 
 typedef GetBarTooltipItemRichText = BarTooltipItemRichText Function(
-    BarChartGroupData group,
-    int groupIndex,
-    BarChartRodData rod,
-    int rodIndex,
-    );
+  BarChartGroupData group,
+  int groupIndex,
+  BarChartRodData rod,
+  int rodIndex,
+);
 
 BarTooltipItem defaultBarTooltipItem(
   BarChartGroupData group,
@@ -433,8 +433,9 @@ BarTooltipItem defaultBarTooltipItem(
 class BarTooltipItem {
   final String text;
   final TextStyle textStyle;
+  final TextSpan textSpan;
 
-  BarTooltipItem(this.text, this.textStyle);
+  BarTooltipItem(this.text, this.textStyle, {this.textSpan});
 }
 
 BarTooltipItemRichText defaultBarTooltipItemRichText(

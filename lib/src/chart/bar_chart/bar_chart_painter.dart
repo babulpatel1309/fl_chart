@@ -364,7 +364,7 @@ class BarChartPainter extends AxisChartPainter<BarChartData> with TouchHandler<B
 
     final TextSpan span = TextSpan(style: tooltipItem.textStyle, text: tooltipItem.text);
     final TextPainter tp = TextPainter(
-        text: span,
+        text: tooltipItem.textSpan ?? span,
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
         textScaleFactor: textScale);

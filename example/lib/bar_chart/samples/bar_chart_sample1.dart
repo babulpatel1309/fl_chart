@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../lib/fl_chart.dart';
-
 class BarChartSample1 extends StatefulWidget {
   final List<Color> availableColors = [
     Colors.purpleAccent,
@@ -183,21 +181,21 @@ class BarChartSample1State extends State<BarChartSample1> {
                   break;
               }
 
-              return BarTooltipItemRichText(RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                      text: weekDay,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.yellow,
-                          fontSize: 20)),
-                  TextSpan(
-                      text: (rod.y - 1).toString(),
-                      style: TextStyle(color: Colors.yellow, fontSize: 10))
-                ]),
-              ));
-//              return BarTooltipItem(weekDay + '\n' + (rod.y - 1).toString(),
-//                  TextStyle(color: Colors.yellow));
+
+//              return BarTooltipItemRichText();
+              return BarTooltipItem(weekDay + '\n' + (rod.y - 1).toString(),
+                  TextStyle(color: Colors.yellow),
+                  textSpan: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: weekDay + '\n',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.yellow,
+                            fontSize: 20)),
+                    TextSpan(
+                        text: (rod.y - 1).toString(),
+                        style: TextStyle(color: Colors.yellow, fontSize: 10))
+                  ]));
             }),
         touchCallback: (barTouchResponse) {
           setState(() {
